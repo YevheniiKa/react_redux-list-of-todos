@@ -31,7 +31,7 @@ const filteredTodos = todos.filter(todo => {
     (filter === 'active' && !todo.completed) ||
     (filter === 'completed' && todo.completed);
 
-  return statusMatch && todo.title.includes(query.toLowerCase());
+  return statusMatch && todo.title.toLowerCase().includes(query.toLowerCase());
 });
 
   return (
