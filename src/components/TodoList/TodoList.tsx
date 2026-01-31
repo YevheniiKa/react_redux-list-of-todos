@@ -4,11 +4,13 @@ import { getTodos } from '../../api';
 import { useDispatch,  } from 'react-redux';
 import { setTodos } from '../../features/todos';
 import { useAppSelector } from '../../hooks/useAppSelector';
+import { setTodo } from '../../features/currentTodo';
 
 export const TodoList: React.FC = () => {
   const dispatch = useDispatch();
   const query = useAppSelector((state) => state.filter.query);
   const filter = useAppSelector((state) => state.filter.status);
+  const currentTodo = useAppSelector((state) => state.currentTodo);
 
 
   useEffect(() => {
@@ -34,7 +36,7 @@ const filteredTodos = todos.filter(todo => {
 
   return (
     <>
-    {filteredTodos.length === 0 ? ( <p className="notification is-warning">
+    {filteredTodos.length === 0 && query.length > 0 ? ( <p className="notification is-warning">
         There are no todos matching current filter criteria
       </p>) :
         (
@@ -45,7 +47,7 @@ const filteredTodos = todos.filter(todo => {
 
             <th>
               <span className="icon">
-                <i className="fas fa-check" />
+                    <i className="fas fa-check" />
               </span>
             </th>
 
@@ -71,9 +73,15 @@ const filteredTodos = todos.filter(todo => {
             </td>
 
             <td className="has-text-right is-vcentered">
-              <button data-cy="selectButton" className="button" type="button">
-                <span className="icon">
-                  <i className="far fa-eye" />
+              <button data-cy="selectButton" className="button" type="button" onClick={() => {
+                      dispatch(setTodo(todo))
+                }}>
+                    <span className="icon" >
+
+                      {currentTodo && currentTodo?.id === todo.id ?
+                        <i className="far fa-eye-slash" /> :
+                        <i className="far fa-eye" />
+          }
                 </span>
               </button>
             </td>
