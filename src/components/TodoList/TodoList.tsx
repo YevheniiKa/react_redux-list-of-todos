@@ -1,29 +1,17 @@
 /* eslint-disable */
-import React, { useEffect,  } from 'react';
-import { getTodos } from '../../api';
+import React from 'react';
 import { useDispatch,  } from 'react-redux';
-import { setTodos } from '../../features/todos';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { setTodo } from '../../features/currentTodo';
 
 export const TodoList: React.FC = () => {
   const dispatch = useDispatch();
+
+  const todos = useAppSelector((state) => state.todos.todos)
   const query = useAppSelector((state) => state.filter.query);
   const filter = useAppSelector((state) => state.filter.status);
   const currentTodo = useAppSelector((state) => state.currentTodo);
 
-
-  useEffect(() => {
-    getTodos()
-      .then(data => {
-        dispatch(setTodos(data));
-      })
-      .catch(err => {
-        console.error('Failed to load todos', err);
-      })
-  }, [dispatch]);
-
-  const todos = useAppSelector((state) => state.todos.todos)
 
 const filteredTodos = todos.filter(todo => {
   const statusMatch =
