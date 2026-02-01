@@ -5,29 +5,30 @@ import { useAppSelector } from '../../hooks/useAppSelector';
 import { User } from '../../types/User';
 import { useDispatch } from 'react-redux';
 import { setTodo } from '../../features/currentTodo';
+import { Todo } from '../../types/Todo';
 
 interface TodoModalProps {
   isOpen: boolean;
 }
 
 export const TodoModal: React.FC<TodoModalProps> = ({ isOpen }) => {
-  const todo = useAppSelector(state => state.currentTodo);
+  const currentTodo = useAppSelector(state => state.currentTodo) as Todo | null;
   const dispatch = useDispatch();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!todo) {
+    if (!currentTodo) {
       return;
     }
 
     setLoading(true);
-    getUser(todo.userId)
+    getUser(currentTodo.userId)
       .then(u => setUser(u))
       .finally(() => setLoading(false));
-  }, [todo]);
+  }, [currentTodo]);
 
-  if (!isOpen || !todo) {
+  if (!isOpen || !currentTodo) {
     return null;
   }
 
@@ -47,7 +48,7 @@ export const TodoModal: React.FC<TodoModalProps> = ({ isOpen }) => {
               className="modal-card-title has-text-weight-medium"
               data-cy="modal-header"
             >
-              Todo #{todo.id}
+              Todo #{currentTodo.id}
             </div>
 
             <button
@@ -60,11 +61,11 @@ export const TodoModal: React.FC<TodoModalProps> = ({ isOpen }) => {
 
           <div className="modal-card-body">
             <p className="block" data-cy="modal-title">
-              {todo.title}
+              {currentTodo.title}
             </p>
 
             <p className="block" data-cy="modal-user">
-              {todo.completed ? (
+              {currentTodo.completed ? (
                 <strong className="has-text-success">Done</strong>
               ) : (
                 <strong className="has-text-danger">Planned</strong>
